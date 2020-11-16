@@ -93,6 +93,24 @@ textarea {
     overflow: auto;
   }
 
+#AddIMG{
+    margin-bottom: 30px;
+    background: #18191A;
+    color: rgb(228, 230, 235);
+    outline: none;
+    border: 2px  #27292b solid;
+    border-radius: 5px;
+    width: 40%;
+    padding: 10px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#AddIMG:hover{
+    background: #27292b;
+}
+
+
 #publier{
     margin-bottom: 10px;
     background: #18191A;
