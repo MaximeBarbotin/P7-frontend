@@ -21,6 +21,12 @@
 
 
 <script>
+const app = new Vue({
+  el: '#app',
+  data: {
+    
+  }
+})
 export default {
   name: 'Header',
   props: {
