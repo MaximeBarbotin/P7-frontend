@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'HeaderNotConnected',
+  name: 'HelloWorld',
   props: {
     msg: String
   }
