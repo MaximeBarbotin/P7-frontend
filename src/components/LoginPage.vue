@@ -10,7 +10,7 @@
                         <form>
                             <input type="email" name="email" placeholder="Email" required>
                             <input type="password" name="password" placeholder="Mot de passe" required>
-                            <button id="login" type="submit">Se connecter</button>
+                            <button v-on:submit="UserConnection = true" id="login" type="submit">Se connecter</button>
                         </form>
                     </div>
                 </div>
@@ -23,6 +23,7 @@
 export default {
   name: 'LoginPage'
 }
+
 </script>
 
 <style scoped>

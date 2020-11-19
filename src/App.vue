@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <HeaderNotConnected/>
-    <PostTemplate/>
+    <HeaderConnected/>
 
     
   </div>
 </template>
 
 <script>
-import PostTemplate from './components/PostTemplate.vue'
-import HeaderNotConnected from './components/HeaderNotConnected.vue'
+import HeaderConnected from './components/HeaderConnected.vue'
+
+
 
 
 
@@ -17,8 +17,8 @@ import HeaderNotConnected from './components/HeaderNotConnected.vue'
 export default {
   name: 'App',
   components: {
-    PostTemplate,
-    HeaderNotConnected
+    HeaderConnected,
+
 
   }
 }

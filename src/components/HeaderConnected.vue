@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <body>
-            <header>
+            <header v-if="UserConnection = 1"><!--Header Connecté-->
             <div class="left_side_header">
                 <ul>
                     <a href=""><li>Accueil</li></a>
@@ -19,15 +19,53 @@
             </div>
             </header> 
             <div class="BackgroundColorDiv">
-            </div>             
+            </div>
+            <header v-if="UserConnection = 0"> <!--Header Déconnecté-->
+            <div class="left_side_header">
+                <ul>
+                    <a href=""><li></li></a>
+                    <a href=""><li></li></a>
+                </ul>
+            </div>
+            <div class="header_logo">
+                <a href="#"><img src="../assets/images/icon-left-font-monochrome-white.png" alt="logo groupomania"></a>
+            </div>
+            <div class="right_side_header">
+                <ul>
+                    <a href=""><li>Inscription</li></a>
+                    <a href=""><li>Connexion</li></a>
+                </ul>
+            </div>
+            </header>
+            <div class="BackgroundColorDiv">
+            </div> 
+            <div class="LoginSection"> <!--Login Section-->
+                    <div class="loginHeader">
+                        <h2>Identifiez-vous</h2>
+                    </div>
+                    <div class="LoginBody">
+                        <form>
+                            <input type="email" name="email" placeholder="Email" required>
+                            <input type="password" name="password" placeholder="Mot de passe" required>
+                            <button v-on:submit="UserConnection = 1" id="login" type="submit">Se connecter</button>
+                        </form>
+                    </div>
+                </div>                
         </body>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'HeaderConnected'
+  name: 'HeaderConnected',
+  data: function() {
+  return {
+    UserConnection: 0
+  };
 }
+}
+
+
 </script>
 
 <style scoped>
