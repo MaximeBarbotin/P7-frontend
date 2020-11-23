@@ -6,7 +6,7 @@
           <div class="AsideContent">
             <img src="../assets/images/icon-left-font-monochrome-white.png" alt="" />
             <ul>
-              <a class="leftMenu" href="#"><li><i class="fa fa-home" aria-hidden="true"></i>Acceuil</li></a>
+              <a class="leftMenu" href="#"><li><i class="fa fa-home" aria-hidden="true"></i>Accueil</li></a>
               <a class="leftMenu" href="#"><li><i class="fa fa-search" aria-hidden="true"></i>Explorer</li></a>
               <a class="leftMenu" href="#"><li><i class="fa fa-bell" aria-hidden="true"></i>Notifications</li></a>
               <a class="leftMenu" href="#"><li><i class="fa fa-envelope" aria-hidden="true"></i>Messages</li></a>
@@ -25,40 +25,37 @@
                   id="PostArea"
                   name="PostArea"
                   rows="5"
-                  placeholder="Ecrivez ici..."
-                ></textarea>
-                <button id="AddIMG">Ajouter un média</button>
+                  placeholder="Ecrivez ici..."></textarea>
+                  <label for="AddIMG" id="AddIMG">Ajouter un média</label>
+                <input type="file" id="AddIMG"/>
                 <button id="publier">Publier</button>
               </div>
             </div>
-            <div class="container">
+            <div class="container" v-for="post in posts" :key="post.title">
               <div class="post">
                 <div class="row">
                   <div class="PostName">
-                    <h2>Post Name</h2>
+                    <h2>{{ post.title }}</h2>
                   </div>
                   <div class="PostDate">
-                    <p>13/11/2020 à 16H11</p>
+                    <p>{{ post.date }}</p>
                   </div>
                 </div>
                 <div class="row">
                   <div class="PostImg">
-                    <img src="../assets/images/tetzetezt.png" alt="Post image" />
+                    <img :src="postImage(post.image)" alt="Post image" />
                   </div>
                 </div>
                 <div class="row">
                   <div class="PostContent">
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Placeat iure laudantium hic animi architecto aliquam illo
-                      dignissimos repellat, maiores beatae quis perferendis autem
-                      aperiam, id veritatis porro, vitae unde. Quisquam?
+                      {{ post.content }}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="container">
+            <!--<div class="container">
               <div class="post">
                 <div class="row">
                   <div class="PostName">
@@ -172,7 +169,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </main>
@@ -264,7 +261,16 @@
 
 <script>
 export default {
-  name: 'PostTemplate'
+  name: 'PostTemplate',
+  props:{
+    posts: Array,
+  },
+  methods:{
+    postImage(image){
+      if(image){
+      return require("@/assets/images/" + image);
+    }}
+  }
 }
 </script>
 
@@ -276,6 +282,10 @@ body, html{
     min-height: 100%;
     font-family: 'Montserrat', sans-serif;
     color: rgb(228, 230, 235);
+}
+
+input[type="file"]{
+  display: none;
 }
 
 body{
