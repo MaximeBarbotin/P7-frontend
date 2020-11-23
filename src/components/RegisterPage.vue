@@ -1,6 +1,24 @@
 <template>
     <div id="app">
         <body>
+            <header>
+            <div class="left_side_header">
+                <ul>
+                    <a href=""><li></li></a>
+                    <a href=""><li></li></a>
+                </ul>
+            </div>
+            <div class="header_logo">
+                <a href="#"><img src="../assets/images/icon-left-font-monochrome-white.png" alt="logo groupomania"></a>
+            </div>
+            <div class="right_side_header">
+                <ul>
+                    <a href="/register"><li>Inscription</li></a>
+                    <a href="/login"><li>Connexion</li></a>
+                </ul>
+            </div>
+            </header>
+            
             <main>
                 <div class="LoginSection">
                     <div class="loginHeader">
@@ -29,18 +47,68 @@ export default {
 
 <style scoped>
 body, html{
-    margin: 0;
     padding: 0;
+    margin: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     font-family: 'Montserrat', sans-serif;
-    background-color: #18191A;
     color: rgb(228, 230, 235);
+}
+
+.BackgroundColorDiv{
+    width: 100%;
+    height: 1000px;
+    background-color: #18191A;
+    position: absolute;
 }
 
 h2{
     text-decoration: underline #D1515A;
 }
+
+header{
+    top: 0;
+    background-color: #091F43;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:105%;
+    height:15%;
+    left:-3%;
+    position: fixed;
+    z-index: 3;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius: 100% 100%;
+    border-bottom-right-radius: 100% 100%;
+}
+
+header img{
+    width: 400px;
+    padding: 50px;
+    justify-content: center;
+}
+
+header ul, header li{
+    list-style: none;
+    display: flex;
+    padding-right: 50px;
+    font-size: 1.25em;
+}
+
+header a:visited{
+    color: white;
+}
+
+header a:hover{
+    color: #D1515A;
+}
+
+a{
+    text-decoration: none;
+}
+
+/*Main Login Section*/
 
 .LoginSection{
     background: #242526;
