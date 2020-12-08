@@ -13,6 +13,16 @@
 <script>
 export default {
   name: "FriendComponent",
+  props: {
+    friend: Object,
+  },
+  methods: {
+    postImage(image) {
+      if (image) {
+        return require("@/assets/images/" + image);
+      }
+    },
+  },
 };
 </script>
 
@@ -20,31 +30,21 @@ export default {
 <style scoped>
 /*Aside right*/
 
-.AsideFriend {
-  background-color: #18191a;
-  width: 25%;
-  height: 100%;
-  position: fixed;
-  top: 0px;
-  left: 75%;
-}
-
-.FriendAsideContent ul {
-  float: left;
-}
-
-.RelationTitle {
-  margin-left: 50px;
-  margin-top: 30px;
-}
-
 .friend {
-  margin-bottom: 15px;
+  margin-bottom: -10px;
 }
 
 .rightMenu img {
   width: 60px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 10px;}
+
+a {
+  text-decoration: none;
+  color: rgb(228, 230, 235);
+}
+
+aside a:hover {
+  color: #d1515a;
 }
 </style>

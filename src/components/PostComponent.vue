@@ -23,12 +23,15 @@
       </div>
       <div class="row">
         <div class="PostLike">
-          <button id="LikeButton" v-on:click="counter += 1">
+          <button id="LikeButton" v-on:click="addLike(post.id)" :key="post.title">
             <i class="fa fa-thumbs-up"></i>
           </button>
           <div class="LikeCounter">
-            <p>{{ counter }}</p>
+            <p>{{ post.likes }}</p>
           </div>
+        </div>
+        <div class="EditSection">
+          <button id="EditButton">Modifier</button>
         </div>
       </div>
     </div>
@@ -37,7 +40,18 @@
 
 <script>
 export default {
-  name: "PostTemplate",
+  name: "PostComponent",
+  props: {
+    post: Object,
+    addLike: Function,
+  },
+  methods: {
+    postImage(image) {
+      if (image) {
+        return require("@/assets/images/" + image);
+      }
+    },
+  },
 };
 </script>
 
@@ -132,12 +146,11 @@ main {
 #LikeButton {
   width: 50px;
   height: 45px;
-  margin-bottom: 10px;
   background: #18191a;
   color: rgb(228, 230, 235);
   outline: none;
   border: 2px #27292b solid;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 10px;
   font-size: 1em;
   font-weight: bold;
@@ -162,16 +175,33 @@ main {
   width: 50px;
   height: 45px;
   margin-bottom: 10px;
+  color: rgb(228, 230, 235);
+  font-weight: bold;
+  font-size: 1.2em;
+  text-align: center;
+  line-height: 75%;
+}
+
+#EditButton {
+  margin-bottom: 10px;
   background: #18191a;
   color: rgb(228, 230, 235);
   outline: none;
-  border: 2px #27292b solid;
-  border-radius: 5px;
+  border: 2px #d1515a solid;
+  border-radius: 10px;
+  width: 100%;
   padding: 10px;
   font-size: 1em;
   font-weight: bold;
-  text-align: center;
-  line-height: 0%;
+}
+
+#EditButton {
+  transition-duration: 0.4s;
+}
+
+#EditButton:hover {
+  background-color: #d1515a;
+  color: white;
 }
 
 h2 {

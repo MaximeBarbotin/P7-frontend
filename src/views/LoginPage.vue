@@ -22,23 +22,23 @@
           </ul>
         </div>
       </header>
-      <div class="BackgroundColorDiv"></div>
       <main>
         <div class="LoginSection">
           <div class="loginHeader">
             <h2>Identifiez-vous</h2>
           </div>
           <div class="LoginBody">
-            <form>
-              <input type="email" name="email" placeholder="Email" required />
+            <form @submit="login">
+              <input type="email" name="email" placeholder="Email" v-model="email" required />
               <input
                 type="password"
                 name="password"
+                v-model="password"
                 placeholder="Mot de passe"
                 required
               />
               <button
-                v-on:submit="UserConnection = true"
+              
                 id="login"
                 type="submit"
               >
@@ -53,8 +53,30 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+
 export default {
   name: "LoginPage",
+  data(){
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    login(e){
+      e.preventDefault();
+        axios
+        .post('http://localhost:3000/api/users/login', {email: this.email, password: this.password})
+        .then((res) => {
+          if(res.data.token){
+            localStorage.setItem('groupomania_token', res.data.token);
+            this.$router.push('/')
+          }
+        })
+    }
+  }
 };
 </script>
 

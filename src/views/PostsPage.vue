@@ -4,7 +4,6 @@
       <!--Aside Left-->
       <aside>
         <div class="AsideMenu">
-          <div class="AsideContent">
             <img
               src="../assets/images/icon-left-font-monochrome-white.png"
               alt=""
@@ -36,7 +35,6 @@
                 </li></a
               >
             </ul>
-          </div>
         </div>
       </aside>
       <!--Post content-->
@@ -58,7 +56,7 @@
               </div>
             </div>
             <div v-for="post in posts" :key="post.title">
-              <PostComponent />
+              <PostComponent :post="post" :addLike="addLike"/>
             </div>
           </div>
         </div>
@@ -69,7 +67,7 @@
           <div class="FriendAsideContent">
             <h2 class="RelationTitle">Relations</h2>
             <ul v-for="friend in friends" :key="friend.name">
-              <FriendComponent></FriendComponent>
+              <FriendComponent :friend="friend"/>
             </ul>
           </div>
         </div>
@@ -80,26 +78,37 @@
 
 <script>
 
+import PostComponent from '../components/PostComponent.vue';
+import FriendComponent from '../components/FriendComponent.vue';
+
 export default {
   name: "PostsPage",
+  components: {
+    PostComponent,
+    FriendComponent
+  },
   data: function () {
     return {
       userConnection: false,
       posts: [
         //posts data
         {
+          id: 1,
           title: "Notre nouveau logo !",
           content:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
           date: "13/11/2020 à 16H11",
           image: "icon-above-font.png",
+          likes: 0,
         },
         {
+          id: 2,
           title: "Titre 2",
           content:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
           date: "13/11/2020 à 16H11",
           image: "1216173.jpg",
+          likes: 1,
         },
         {
           title: "Titre 3",
@@ -126,7 +135,7 @@ export default {
       friends: [
         //liste d'amis data
         {
-          name: "Laure test",
+          name: "Laure Delacour",
           image: "ProfilPictures/dwfscgcdhfvjhk.jpg",
         },
         {
@@ -165,14 +174,24 @@ export default {
       counter: 0, //compteur de like
     };
   },
+  created(){
+      //TODO: Envoyer une requete à l'API pour récupérer le listing de posts et le listing friends
+      //api.getPosts().then(d => this.posts = d)
+      //api.getFriends().then(d => this.friends = d)
+  },
   methods: {
-    postImage(image) {
-      if (image) {
-        return require("@/assets/images/" + image);
+    addLike(postId){
+      //TODO: Envoyer une requete au backend pour incrémenter les likes
+      for(let i = 0; i < this.posts.length; i++){
+        if(this.posts[i].id === postId){
+          this.posts[i].likes += 1;
+          break;
+        }
       }
-    },
+    }
   },
 };
+
 </script>
 
 <style scoped>
@@ -207,7 +226,6 @@ main {
 }
 
 h2 {
-  text-decoration: underline #d1515a;
   color: rgb(228, 230, 235);
 }
 
@@ -248,6 +266,7 @@ textarea {
   outline: none;
   resize: none;
   overflow: auto;
+  border-radius: 10px;
 }
 
 #AddIMG {
@@ -256,10 +275,12 @@ textarea {
   color: rgb(228, 230, 235);
   outline: none;
   border: 2px #27292b solid;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 40%;
   padding: 10px;
+  margin: 20px 0px 20px 0px;
   font-size: 1em;
+  text-align: center;
   font-weight: bold;
 }
 
@@ -273,7 +294,7 @@ textarea {
   color: rgb(228, 230, 235);
   outline: none;
   border: 2px #d1515a solid;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 50%;
   padding: 10px;
   font-size: 1.2em;
@@ -343,10 +364,29 @@ a {
   margin-right: 10px;
 }
 
-.AsideContent img {
+.AsideMenu img {
   width: 60%;
   margin-bottom: 40px;
   margin-left: 20%;
+}
+
+/*AsideRight*/
+.AsideFriend {
+  background-color: #18191a;
+  width: 25%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 75%;
+}
+
+.FriendAsideContent ul {
+  float: left;
+}
+
+.RelationTitle {
+  margin-left: 50px;
+  margin-top: 30px;
 }
 
 /*responsive !!!*/
@@ -369,30 +409,31 @@ a {
 @media screen and (max-width: 1150px) {
   .AsideMenu {
     position: fixed;
-    height: 130px;
+    height: 100px;
     font-size: 1.3em;
     top: 0px;
+    right: 0;
     padding-top: 0px;
     z-index: 4;
-  }
-
-  .AsideContent {
     display: flex;
     flex-direction: row;
     width: 100%;
-    background: #18191a;
+    background: #242526;
+    box-shadow: 0px 0px 10px #242526;
   }
-  .AsideContent img {
+  .AsideMenu img {
     display: none;
   }
 
-  .AsideContent ul {
+  .AsideMenu ul {
+    margin: auto;
     display: flex;
     flex-direction: row;
     height: 100px;
+    line-height: 400%;
   }
 
-  .AsideContent li {
+  .AsideMenu li {
     margin-right: 20px;
   }
 
