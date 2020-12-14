@@ -1,73 +1,48 @@
 <template>
   <div id="app">
-    <body>
-      <header>
-        <div class="left_side_header">
-          <ul>
-            <a href=""><li></li></a>
-            <a href=""><li></li></a>
-          </ul>
-        </div>
-        <div class="header_logo">
-          <a href="/"
-            ><img
-              src="../assets/images/icon-left-font-monochrome-white.png"
-              alt="logo groupomania"
-          /></a>
-        </div>
-        <div class="right_side_header">
-          <ul>
-            <a href="/register"><li>Inscription</li></a>
-            <a href="/login"><li>Connexion</li></a>
-          </ul>
-        </div>
-      </header>
-      <main>
-        <div class="LoginSection">
-          <div class="loginHeader">
-            <h2>Identifiez-vous</h2>
+    <header>
+      <div class="left_side_header">
+        <ul>
+          <a href=""><li></li></a>
+          <a href=""><li></li></a>
+        </ul>
+      </div>
+      <div class="header_logo">
+        <a href="/"
+          ><img
+            src="../assets/images/icon-left-font-monochrome-white.png"
+            alt="logo groupomania"
+        /></a>
+      </div>
+      <div class="right_side_header">
+        <ul>
+          <a href="/register"><li>Inscription</li></a>
+          <a href="/login"><li>Connexion</li></a>
+        </ul>
+      </div>
+    </header>
+    <main>
+        <div class="ProfileSection">
+          <div class="ProfileHeader">
+            <h2>Modifiez vos informations</h2>
           </div>
-          <div class="LoginBody">
+          <div class="ProfileBody">
             <form @submit="login">
-              <input type="email" name="email" placeholder="Email" v-model="email" required/>
-              <input type="password" name="password" v-model="password" placeholder="Mot de passe" required/>
-              <button id="login" type="submit">Se connecter</button>
+              <input type="email" name="email" placeholder="Changer d'Email" v-model="email" required/>
+              <input type="password" name="password" v-model="password" placeholder="Modifier votre mot de passe" required/>
+              <button id="ProfileEdit" type="submit">Modifier</button>
             </form>
           </div>
         </div>
       </main>
-    </body>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  name: "LoginPage",
-  data() {
-    return {
-      email: "",
-      password: "",
-    };
-  },
-  methods: {
-    login(e) {
-      e.preventDefault();
-      axios
-        .post("http://localhost:3000/api/users/login", {
-          email: this.email,
-          password: this.password,
-        })
-        .then((res) => {
-          if (res.data.token) {
-            localStorage.setItem("groupomania_token", res.data.token);
-            this.$router.push("/");
-          }
-        });
-    },
-  },
+    name: "ProfilePage",
 };
+//TO DO: modification info BDD
 </script>
 
 <style scoped>
@@ -83,6 +58,8 @@ html {
 
 h2 {
   text-decoration: underline #d1515a;
+  color: rgb(228, 230, 235);
+
 }
 
 header {
@@ -128,9 +105,9 @@ a {
   text-decoration: none;
 }
 
-/*Main Login Section*/
+/*Main Edit Section*/
 
-.LoginSection {
+.ProfileSection {
   background: #242526;
   margin: auto;
   display: flex;
@@ -142,12 +119,12 @@ a {
   padding: 20px;
 }
 
-.LoginBody form {
+.ProfileBody form {
   display: flex;
   flex-direction: column;
 }
 
-#login {
+#ProfileEdit {
   margin-bottom: 10px;
   margin: auto;
   margin-top: 15px;
@@ -174,7 +151,7 @@ input {
   font-size: 1.1em;
 }
 
-#login:hover {
+#ProfileEdit:hover {
   background-color: #d1515a;
   color: white;
 }

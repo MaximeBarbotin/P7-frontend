@@ -4,37 +4,40 @@
       <!--Aside Left-->
       <aside>
         <div class="AsideMenu">
-            <img
-              src="../assets/images/icon-left-font-monochrome-white.png"
-              alt=""
-            />
-            <ul>
-              <a class="leftMenu" href="#"
-                ><li>
-                  <i class="fa fa-home" aria-hidden="true"></i>Accueil
-                </li></a
-              >
-              <a class="leftMenu" href="#"
-                ><li>
-                  <i class="fa fa-search" aria-hidden="true"></i>Explorer
-                </li></a
-              >
-              <a class="leftMenu" href="#"
-                ><li>
-                  <i class="fa fa-bell" aria-hidden="true"></i>Notifications
-                </li></a
-              >
-              <a class="leftMenu" href="#"
-                ><li>
-                  <i class="fa fa-envelope" aria-hidden="true"></i>Messages
-                </li></a
-              >
-              <a class="leftMenu" href="#"
-                ><li>
-                  <i class="fa fa-ellipsis-h" aria-hidden="true"></i>Plus
-                </li></a
-              >
-            </ul>
+          <img
+            src="../assets/images/icon-left-font-monochrome-white.png"
+            alt=""
+          />
+          <ul>
+            <a class="leftMenu" href="#"
+              ><li><i class="fa fa-home" aria-hidden="true"></i>Accueil</li></a
+            >
+            <a class="leftMenu" href="#"
+              ><li>
+                <i class="fa fa-search" aria-hidden="true"></i>Explorer
+              </li></a
+            >
+            <a class="leftMenu" href="#"
+              ><li>
+                <i class="fa fa-bell" aria-hidden="true"></i>Notifications
+              </li></a
+            >
+            <a class="leftMenu" href="#"
+              ><li>
+                <i class="fa fa-envelope" aria-hidden="true"></i>Messages
+              </li></a
+            >
+            <a class="leftMenu" href="/profile"
+              ><li>
+                <i class="fa fa-user" aria-hidden="true"></i>Mon profile
+              </li></a
+            >
+            <a class="leftMenu" href="#"
+              ><li>
+                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>Plus
+              </li></a
+            >
+          </ul>
         </div>
       </aside>
       <!--Post content-->
@@ -55,8 +58,8 @@
                 <button id="publier">Publier</button>
               </div>
             </div>
-            <div v-for="post in posts" :key="post.title">
-              <PostComponent :post="post" :addLike="addLike"/>
+            <div v-for="post in posts" :key="post.id">
+              <PostComponent :post="post" :addLike="addLike" />
             </div>
           </div>
         </div>
@@ -67,7 +70,7 @@
           <div class="FriendAsideContent">
             <h2 class="RelationTitle">Relations</h2>
             <ul v-for="friend in friends" :key="friend.name">
-              <FriendComponent :friend="friend"/>
+              <FriendComponent :friend="friend" />
             </ul>
           </div>
         </div>
@@ -77,61 +80,21 @@
 </template>
 
 <script>
+import PostComponent from "../components/PostComponent.vue";
+import FriendComponent from "../components/FriendComponent.vue";
 
-import PostComponent from '../components/PostComponent.vue';
-import FriendComponent from '../components/FriendComponent.vue';
+import axios from "axios";
 
 export default {
   name: "PostsPage",
   components: {
     PostComponent,
-    FriendComponent
+    FriendComponent,
   },
   data: function () {
     return {
       userConnection: false,
-      posts: [
-        //posts data
-        {
-          id: 1,
-          title: "Notre nouveau logo !",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
-          date: "13/11/2020 à 16H11",
-          image: "icon-above-font.png",
-          likes: 0,
-        },
-        {
-          id: 2,
-          title: "Titre 2",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
-          date: "13/11/2020 à 16H11",
-          image: "1216173.jpg",
-          likes: 1,
-        },
-        {
-          title: "Titre 3",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
-          date: "13/11/2020 à 16H11",
-          image: "tetzetezt.png",
-        },
-        {
-          title: "Titre 4",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
-          date: "13/11/2020 à 16H11",
-          image: "icon-above-font.png",
-        },
-        {
-          title: "Titre 5",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat iure laudantium hic animi architecto aliquam illo dignissimos repellat, maiores beatae quis perferendis autem aperiam, id veritatis porro, vitae unde. Quisquam?",
-          date: "13/11/2020 à 16H11",
-          image: "1216173.jpg",
-        },
-      ],
+      posts: [],
       friends: [
         //liste d'amis data
         {
@@ -174,24 +137,32 @@ export default {
       counter: 0, //compteur de like
     };
   },
-  created(){
-      //TODO: Envoyer une requete à l'API pour récupérer le listing de posts et le listing friends
-      //api.getPosts().then(d => this.posts = d)
-      //api.getFriends().then(d => this.friends = d)
+  created() {
+    const token = localStorage.getItem("groupomania_token");
+    axios
+      .get("http://localhost:3000/api/posts", {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((d) => {
+        this.posts = d.data;
+      });
+
+    //TODO: Envoyer une requete à l'API pour récupérer le listing de posts et le listing friends
+    //api.getPosts().then(d => this.posts = d)
+    //api.getFriends().then(d => this.friends = d)
   },
   methods: {
-    addLike(postId){
+    addLike(postId) {
       //TODO: Envoyer une requete au backend pour incrémenter les likes
-      for(let i = 0; i < this.posts.length; i++){
-        if(this.posts[i].id === postId){
+      for (let i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].id === postId) {
           this.posts[i].likes += 1;
           break;
         }
       }
-    }
+    },
   },
 };
-
 </script>
 
 <style scoped>

@@ -6,18 +6,18 @@
           <h2>{{ post.title }}</h2>
         </div>
         <div class="PostDate">
-          <p>{{ post.date }}</p>
+          <p>{{ formatDate(post.date) }}</p>
         </div>
       </div>
       <div class="row">
-        <div class="PostImg">
+        <div class="PostImg" v-if="post.image">
           <img :src="postImage(post.image)" alt="Post image" />
         </div>
       </div>
       <div class="row">
         <div class="PostContent">
           <p>
-            {{ post.content }}
+            {{ post.description }}
           </p>
         </div>
       </div>
@@ -31,7 +31,8 @@
           </div>
         </div>
         <div class="EditSection">
-          <button id="EditButton">Modifier</button>
+          <button  @click="modifyPost(post.id)" id="EditButton">Modifier</button>
+          <button @click="deletePost(post.id)" id="DeleteButton">Supprimer</button>
         </div>
       </div>
     </div>
@@ -39,16 +40,26 @@
 </template>
 
 <script>
+
+import dayjs from 'dayjs'
+
 export default {
   name: "PostComponent",
   props: {
     post: Object,
     addLike: Function,
+    deletePost: Function,
+    modifyPost: Function,
   },
+
   methods: {
+    formatDate(date){
+      return dayjs(date).format('Publié le DD/MM/YYYY à HH:mm')
+    },
+
     postImage(image) {
       if (image) {
-        return require("@/assets/images/" + image);
+        return 'http://localhost:3000/images/' + image;
       }
     },
   },
@@ -122,7 +133,7 @@ main {
   font-style: italic;
 }
 
-.PostImg :last-child {
+.PostImg img {
   width: 100%;
 }
 
@@ -182,6 +193,12 @@ main {
   line-height: 75%;
 }
 
+/*///////////////////////////////////////*/
+.EditSection{
+  display: flex;
+  flex-direction: row;
+}
+
 #EditButton {
   margin-bottom: 10px;
   background: #18191a;
@@ -191,6 +208,7 @@ main {
   border-radius: 10px;
   width: 100%;
   padding: 10px;
+  margin-left: 10px;
   font-size: 1em;
   font-weight: bold;
 }
@@ -201,6 +219,29 @@ main {
 
 #EditButton:hover {
   background-color: #d1515a;
+  color: white;
+}
+
+#DeleteButton {
+  margin-bottom: 10px;
+  background: #18191a;
+  color: rgb(235, 228, 228);
+  outline: none;
+  border: 2px #d1515a solid;
+  border-radius: 10px;
+  width: 100%;
+  padding: 10px;
+  margin-left: 10px;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#DeleteButton {
+  transition-duration: 0.4s;
+}
+
+#DeleteButton:hover {
+  background-color: #d1515a7a;
   color: white;
 }
 

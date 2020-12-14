@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import PostsPage from '../views/PostsPage.vue';
+import ProfilePage from '../views/ProfilePage.vue';
 
 const router = new VueRouter({
   mode: 'history',
@@ -14,6 +15,7 @@ const router = new VueRouter({
     { path: '/', component: PostsPage },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
+    { path: '/profile', component: ProfilePage },
     
   ]
 });
