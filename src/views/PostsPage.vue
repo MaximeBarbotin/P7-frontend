@@ -29,12 +29,12 @@
             >
             <a class="leftMenu" href="/profile"
               ><li>
-                <i class="fa fa-user" aria-hidden="true"></i>Mon profile
+                <i class="fa fa-user" aria-hidden="true"></i>Mon profil
               </li></a
             >
-            <a class="leftMenu" href="#"
+            <a class="leftMenu" href="#" @click="logout($event)"
               ><li>
-                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>Plus
+                <i class="fa fa-power" aria-hidden="true"></i>Déconnexion
               </li></a
             >
           </ul>
@@ -45,21 +45,29 @@
         <div class="LeftLine">
           <div class="RightLine">
             <div class="container">
-              <div class="PostingBloc post">
+              <form class="post" @submit="createPost($event)">
                 <h2>Publier</h2>
-                <textarea
-                  id="PostArea"
-                  name="PostArea"
-                  rows="5"
-                  placeholder="Ecrivez ici..."
-                ></textarea>
-                <label for="AddIMG" id="AddIMG">Ajouter un média</label>
-                <input type="file" id="AddIMG" />
-                <button id="publier">Publier</button>
-              </div>
+                  <input type="text" name="title" id="titleArea" placeholder="Votre titre" required>
+                  <textarea
+                    id="PostArea"
+                    name="description"
+                    rows="5"
+                    placeholder="Ecrivez ici..."
+                  ></textarea>
+                  <label for="AddIMGG" id="AddIMG">Ajouter un média</label>
+                  <input type="file" id="AddIMGG" name="image"/>
+                  <button type="submit" id="publier">
+                    Publier
+                  </button>
+              </form>
             </div>
             <div v-for="post in posts" :key="post.id">
-              <PostComponent :post="post" :addLike="addLike" />
+              <PostComponent 
+                :post="post"
+                :addLike="addLike"
+                :deletePost="deletePost"
+                :modifyPostParent="modifyPost"
+                 />
             </div>
           </div>
         </div>
@@ -94,6 +102,7 @@ export default {
   data: function () {
     return {
       userConnection: false,
+
       posts: [],
       friends: [
         //liste d'amis data
@@ -153,15 +162,70 @@ export default {
   },
   methods: {
     addLike(postId) {
-      //TODO: Envoyer une requete au backend pour incrémenter les likes
-      for (let i = 0; i < this.posts.length; i++) {
-        if (this.posts[i].id === postId) {
-          this.posts[i].likes += 1;
-          break;
-        }
-      }
+
+      const token = localStorage.getItem("groupomania_token");
+      axios.post("http://localhost:3000/api/posts/" + postId + '/like', {}, {
+        headers: { Authorization: "Bearer " + token },
+      }).then(d => {
+        this.posts = this.posts.map(post => {
+          if(post.id === postId){
+            if(d.status === 201){
+              post.likes += 1
+            } else {
+              post.likes -= 1
+            }
+          }
+          return post;
+        })
+      }) 
+
+    
     },
+  //Création d'un POST
+  createPost(event) {
+    event.preventDefault();
+    const token = localStorage.getItem("groupomania_token");
+    const info = {
+      title: event.target.title.value,
+      description: event.target.description.value,
+      image: event.target.image.value
+    }
+    axios
+      .post("http://localhost:3000/api/posts", info, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((d) => {
+        this.posts = [d.data.post].concat(this.posts)
+        event.target.title.value = '';
+        event.target.description.value = '';
+        event.target.image.value = null;
+      });
   },
+  modifyPost(pid, post) {
+      const token = localStorage.getItem("groupomania_token");
+      axios
+      .put("http://localhost:3000/api/posts/" + pid, post, {
+        headers: { Authorization: "Bearer " + token },
+      })
+    },
+  deletePost(id){
+    if(confirm('Voulez-vous vraiment supprimer ce post ?')){
+      const token = localStorage.getItem("groupomania_token");
+      axios
+        .delete("http://localhost:3000/api/posts/"+ id, {
+          headers: { Authorization: "Bearer " + token },
+        })
+        .then(() => {
+          this.posts = this.posts.filter(post => post.id !== id)
+        });
+    }
+  },
+  logout(event){
+    event.preventDefault();
+    localStorage.removeItem('groupomania_token')
+    this.$router.push('/login')
+  }
+  }
 };
 </script>
 
@@ -235,9 +299,20 @@ textarea {
   border: 1px solid #18191a;
   font-family: "Montserrat", sans-serif;
   outline: none;
-  resize: none;
   overflow: auto;
   border-radius: 10px;
+}
+
+#titleArea {
+  background: #18191a;
+  color: rgb(228, 230, 235);
+  border: 1px solid #18191a;
+  font-family: "Montserrat", sans-serif;
+  outline: none;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 75%;
+  height: 40px;
 }
 
 #AddIMG {
@@ -281,7 +356,8 @@ textarea {
   color: white;
 }
 
-#PostArea::placeholder {
+#PostArea::placeholder,
+input::placeholder {
   color: rgb(228, 230, 235);
 }
 

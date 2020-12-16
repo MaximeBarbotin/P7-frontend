@@ -29,8 +29,20 @@
           </div>
           <div class="LoginBody">
             <form @submit="login">
-              <input type="email" name="email" placeholder="Email" v-model="email" required/>
-              <input type="password" name="password" v-model="password" placeholder="Mot de passe" required/>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                v-model="email"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                v-model="password"
+                placeholder="Mot de passe"
+                required
+              />
               <button id="login" type="submit">Se connecter</button>
             </form>
           </div>

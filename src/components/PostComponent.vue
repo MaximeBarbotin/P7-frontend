@@ -23,25 +23,57 @@
       </div>
       <div class="row">
         <div class="PostLike">
-          <button id="LikeButton" v-on:click="addLike(post.id)" :key="post.title">
+          <button
+            id="LikeButton"
+            v-on:click="addLike(post.id)"
+            :key="post.title"
+          >
             <i class="fa fa-thumbs-up"></i>
           </button>
           <div class="LikeCounter">
             <p>{{ post.likes }}</p>
           </div>
         </div>
-        <div class="EditSection">
-          <button  @click="modifyPost(post.id)" id="EditButton">Modifier</button>
-          <button @click="deletePost(post.id)" id="DeleteButton">Supprimer</button>
+        <div class="EditSection" v-if="post.modifiable">
+          <button @click="postModifying = post" id="EditButton">
+            Modifier
+          </button>
+          <button @click="deletePost(post.id)" id="DeleteButton">
+            Supprimer
+          </button>
         </div>
       </div>
+    </div>
+    <div v-if="postModifying" class="modal-container">
+      <div class="modal">
+        <form
+          @submit="($event) => modifyPost($event, post.id)"
+          class="post modalContent"
+        >
+          <h2>Modifiez</h2>
+          <input id="titleArea" v-model="postModifying.title" />
+          <textarea
+            v-model="postModifying.description"
+            id="PostArea"
+            name="PostArea"
+            rows="5"
+          ></textarea>
+          <label for="AddIMGG" id="AddIMG">Remplacer le média</label>
+          <input type="file" id="AddIMGG" />
+          <div class="EditButtons">
+          <button type="submit" id="EditSubmit">Modifier</button>
+          <button id="AddIMG" @click="postModifying = null">Annuler</button>
+          </div>
+
+        </form>
+      </div>
+      <div class="backdrop" @click="postModifying = null"></div>
     </div>
   </div>
 </template>
 
 <script>
-
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 
 export default {
   name: "PostComponent",
@@ -49,18 +81,30 @@ export default {
     post: Object,
     addLike: Function,
     deletePost: Function,
-    modifyPost: Function,
+    modifyPostParent: Function,
   },
-
+  data() {
+    return {
+      postModifying: null,
+    };
+  },
   methods: {
-    formatDate(date){
-      return dayjs(date).format('Publié le DD/MM/YYYY à HH:mm')
+    formatDate(date) {
+      return dayjs(date).format("Publié le DD/MM/YYYY à HH:mm");
     },
 
     postImage(image) {
       if (image) {
-        return 'http://localhost:3000/images/' + image;
+        return "http://localhost:3000/images/" + image;
       }
+    },
+
+    //Modification d'un POST
+    modifyPost(event, pid) {
+      event.preventDefault();
+      
+      this.modifyPostParent(pid, this.postModifying)
+      this.postModifying = null;
     },
   },
 };
@@ -194,7 +238,7 @@ main {
 }
 
 /*///////////////////////////////////////*/
-.EditSection{
+.EditSection {
   display: flex;
   flex-direction: row;
 }
@@ -248,5 +292,117 @@ main {
 h2 {
   text-decoration: underline #d1515a;
   color: rgb(228, 230, 235);
+}
+
+/*Modal STYLE*/
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  z-index: 1000;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.modalContent {
+  color: rgb(228, 230, 235);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  padding: 30px;
+  background-color: #242526;
+  border-radius: 10px;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+textarea {
+  background: #18191a;
+  color: rgb(228, 230, 235);
+  border: 1px solid #18191a;
+  font-family: "Montserrat", sans-serif;
+  outline: none;
+  overflow: auto;
+  border-radius: 10px;
+}
+
+#titleArea {
+  background: #18191a;
+  color: rgb(228, 230, 235);
+  border: 1px solid #18191a;
+  font-family: "Montserrat", sans-serif;
+  outline: none;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 75%;
+  height: 40px;
+}
+
+#AddIMG {
+  margin-bottom: 30px;
+  background: #18191a;
+  color: rgb(228, 230, 235);
+  outline: none;
+  border: 2px #27292b solid;
+  border-radius: 10px;
+  width: 40%;
+  padding: 10px;
+  margin: 0px 0px 20px 10px;
+  font-size: 1em;
+  text-align: center;
+  font-weight: bold;
+  float: right;
+}
+
+#AddIMG:hover {
+  background: #27292b;
+}
+
+#PostArea::placeholder,
+input::placeholder {
+  color: rgb(228, 230, 235);
+}
+
+#EditSubmit {
+  margin-bottom: 10px;
+  background: #18191a;
+  color: rgb(228, 230, 235);
+  outline: none;
+  border: 2px #d1515a solid;
+  border-radius: 10px;
+  width: 50%;
+  padding: 10px;
+  margin: auto;
+  font-size: 1em;
+  font-weight: bold;
+  float: left;
+}
+
+#EditSubmit {
+  transition-duration: 0.4s;
+}
+
+#EditSubmit:hover {
+  background-color: #d1515a;
+  color: white;
+}
+
+.EditButtons{
+  align-items: center;
 }
 </style>

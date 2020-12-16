@@ -30,24 +30,15 @@
             <h2>Inscrivez-vous</h2>
           </div>
           <div class="LoginBody">
-            <form>
+            <form @submit="register($event)">
+              <input type="text" name="first_name" placeholder="Prénom" required />
+              <input type="text" name="last_name" placeholder="Nom" required />
               <input type="email" name="email" placeholder="Email" required />
-              <input
-                type="email"
-                name="email"
-                placeholder="Confirmez votre Email"
-                required
-              />
+            
               <input
                 type="password"
                 name="password"
                 placeholder="Mot de passe"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="Confirmez votre Mot de passe"
                 required
               />
               <button id="login" type="submit">S'inscrire</button>
@@ -60,8 +51,27 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+
 export default {
   name: "RegisterPage",
+  methods: {
+    register(event){
+      console.log(event)
+      event.preventDefault();
+      axios
+      .post('http://localhost:3000/api/users/register', {
+        first_name: event.target.first_name.value,
+         last_name: event.target.last_name.value,
+         email: event.target.email.value, 
+         password: event.target.password.value
+         })
+      .then(() => {
+        this.$router.push('/login')
+      })
+    }
+  }
 };
 </script>
 
