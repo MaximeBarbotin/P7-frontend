@@ -34,7 +34,7 @@
             >
             <a class="leftMenu" href="#" @click="logout($event)"
               ><li>
-                <i class="fa fa-power" aria-hidden="true"></i>Déconnexion
+                <i class="fa fa-power-off" aria-hidden="true"></i>Déconnexion
               </li></a
             >
           </ul>
@@ -171,8 +171,10 @@ export default {
           if(post.id === postId){
             if(d.status === 201){
               post.likes += 1
+              post.liked = 1
             } else {
               post.likes -= 1
+              post.liked = 0
             }
           }
           return post;
@@ -184,15 +186,15 @@ export default {
   //Création d'un POST
   createPost(event) {
     event.preventDefault();
+    var bodyFormData = new FormData();
+    bodyFormData.append('title', event.target.title.value)
+    bodyFormData.append('description', event.target.description.value)
+    bodyFormData.append('image', event.target.image.files[0])
+
     const token = localStorage.getItem("groupomania_token");
-    const info = {
-      title: event.target.title.value,
-      description: event.target.description.value,
-      image: event.target.image.value
-    }
     axios
-      .post("http://localhost:3000/api/posts", info, {
-        headers: { Authorization: "Bearer " + token },
+      .post("http://localhost:3000/api/posts", bodyFormData, {
+        headers: { Authorization: "Bearer " + token, 'Content-Type': 'multipart/form-data' },
       })
       .then((d) => {
         this.posts = [d.data.post].concat(this.posts)
@@ -202,10 +204,19 @@ export default {
       });
   },
   modifyPost(pid, post) {
+      
       const token = localStorage.getItem("groupomania_token");
       axios
       .put("http://localhost:3000/api/posts/" + pid, post, {
         headers: { Authorization: "Bearer " + token },
+      }).then((d) => {
+        this.posts = this.posts.map(p => {
+          if(pid === p.id){
+            p['image'] = d.data.filename
+          }
+         
+          return p
+        })
       })
     },
   deletePost(id){

@@ -3,7 +3,7 @@
     <div class="post">
       <div class="row">
         <div class="PostName">
-          <h2>{{ post.title }}</h2>
+          <h2>{{ post.title }} ({{post.first_name}} {{post.last_name}})</h2>
         </div>
         <div class="PostDate">
           <p>{{ formatDate(post.date) }}</p>
@@ -27,6 +27,7 @@
             id="LikeButton"
             v-on:click="addLike(post.id)"
             :key="post.title"
+            :class="{active: post.liked === 1}"
           >
             <i class="fa fa-thumbs-up"></i>
           </button>
@@ -58,8 +59,8 @@
             name="PostArea"
             rows="5"
           ></textarea>
-          <label for="AddIMGG" id="AddIMG">Remplacer le média</label>
-          <input type="file" id="AddIMGG" />
+          <label for="AddIMGUpdate" id="AddIMG">Remplacer le média</label>
+          <input type="file" id="AddIMGUpdate" name="image" />
           <div class="EditButtons">
           <button type="submit" id="EditSubmit">Modifier</button>
           <button id="AddIMG" @click="postModifying = null">Annuler</button>
@@ -102,8 +103,11 @@ export default {
     //Modification d'un POST
     modifyPost(event, pid) {
       event.preventDefault();
-      
-      this.modifyPostParent(pid, this.postModifying)
+      var bodyFormData = new FormData();
+      bodyFormData.append('title', this.postModifying.title)
+      bodyFormData.append('description', this.postModifying.description)
+      bodyFormData.append('image', event.target.image.files[0])
+      this.modifyPostParent(pid, bodyFormData)
       this.postModifying = null;
     },
   },
@@ -226,6 +230,16 @@ main {
   color: #d1515a;
 }
 
+#LikeButton:active {
+  background:#18191a;
+  color: #d1515a;
+}
+
+#LikeButton.active {
+  
+  color: #d1515a;
+}
+
 .LikeCounter {
   width: 50px;
   height: 45px;
@@ -296,13 +310,13 @@ h2 {
 
 /*Modal STYLE*/
 .modal {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
   z-index: 1000;
-  width: 60%;
+  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -27,9 +27,10 @@
             <h2>Modifiez vos informations</h2>
           </div>
           <div class="ProfileBody">
-            <form @submit="login">
+            <form @submit="updateProfile($event)">
+              <input type="text" name="first_name" placeholder="Changer de prénom" v-model="first_name" required/>
+              <input type="text" name="last_name" placeholder="Changer de nom" v-model="last_name" required/>
               <input type="email" name="email" placeholder="Changer d'Email" v-model="email" required/>
-              <input type="password" name="password" v-model="password" placeholder="Modifier votre mot de passe" required/>
               <button id="ProfileEdit" type="submit">Modifier</button>
             </form>
           </div>
@@ -39,8 +40,46 @@
 </template>
 
 <script>
+
+import axios from "axios";
+
 export default {
     name: "ProfilePage",
+    data() {
+      return{
+        id: "",
+        first_name: '',
+        last_name: '',
+        email: '',
+      }
+    },
+    created(){
+        const token = localStorage.getItem("groupomania_token");
+        axios
+          .get("http://localhost:3000/api/users/me", {
+            headers: { Authorization: "Bearer " + token },
+          })
+          .then((d) => {
+            this.id = d.data.id;
+            this.first_name = d.data.first_name
+            this.last_name = d.data.last_name
+            this.email = d.data.email
+           
+          });
+    },
+    methods: {
+      updateProfile(e){
+          e.preventDefault();
+          const token = localStorage.getItem("groupomania_token");
+        axios
+          .put("http://localhost:3000/api/users/" + this.id, {first_name: this.first_name, last_name: this.last_name, email: this.email}, {
+            headers: { Authorization: "Bearer " + token },
+          })
+          .then(() => {
+            this.$router.push('/')
+          });
+      }
+    }
 };
 //TO DO: modification info BDD
 </script>
