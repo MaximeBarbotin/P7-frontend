@@ -358,12 +358,15 @@ textarea {
   font-weight: bold;
 }
 
-#publier {
+#publier:hover {
   transition-duration: 0.4s;
+  background-color: #d1515a;
+  color: white;
 }
 
-#publier:hover {
-  background-color: #d1515a;
+#publier:active {
+  transition-duration: 0s;
+  background-color: #d1515a8f;
   color: white;
 }
 

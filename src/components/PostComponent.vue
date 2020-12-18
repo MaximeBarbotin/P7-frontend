@@ -1,9 +1,12 @@
 <template>
   <div class="container">
     <div class="post">
+      <div class="Author">
+        <p>Publié par {{ post.first_name }} {{ post.last_name }}</p>
+      </div>
       <div class="row">
         <div class="PostName">
-          <h2>{{ post.title }} ({{post.first_name}} {{post.last_name}})</h2>
+          <h2>{{ post.title }}</h2>
         </div>
         <div class="PostDate">
           <p>{{ formatDate(post.date) }}</p>
@@ -27,7 +30,7 @@
             id="LikeButton"
             v-on:click="addLike(post.id)"
             :key="post.title"
-            :class="{active: post.liked === 1}"
+            :class="{ active: post.liked === 1 }"
           >
             <i class="fa fa-thumbs-up"></i>
           </button>
@@ -62,10 +65,9 @@
           <label for="AddIMGUpdate" id="AddIMG">Remplacer le média</label>
           <input type="file" id="AddIMGUpdate" name="image" />
           <div class="EditButtons">
-          <button type="submit" id="EditSubmit">Modifier</button>
-          <button id="AddIMG" @click="postModifying = null">Annuler</button>
+            <button type="submit" id="EditSubmit">Modifier</button>
+            <button id="AddIMG" @click="postModifying = null">Annuler</button>
           </div>
-
         </form>
       </div>
       <div class="backdrop" @click="postModifying = null"></div>
@@ -104,10 +106,10 @@ export default {
     modifyPost(event, pid) {
       event.preventDefault();
       var bodyFormData = new FormData();
-      bodyFormData.append('title', this.postModifying.title)
-      bodyFormData.append('description', this.postModifying.description)
-      bodyFormData.append('image', event.target.image.files[0])
-      this.modifyPostParent(pid, bodyFormData)
+      bodyFormData.append("title", this.postModifying.title);
+      bodyFormData.append("description", this.postModifying.description);
+      bodyFormData.append("image", event.target.image.files[0]);
+      this.modifyPostParent(pid, bodyFormData);
       this.postModifying = null;
     },
   },
@@ -144,6 +146,17 @@ main {
   width: 50%;
   margin: auto;
   background-color: #18191a;
+}
+
+/*Post*/
+
+.italic {
+  font-style: italic;
+}
+
+.Author {
+  font-size: 1.3em;
+  margin-bottom: -20px;
 }
 
 .post {
@@ -231,12 +244,11 @@ main {
 }
 
 #LikeButton:active {
-  background:#18191a;
+  background: #18191a;
   color: #d1515a;
 }
 
 #LikeButton.active {
-  
   color: #d1515a;
 }
 
@@ -416,7 +428,7 @@ input::placeholder {
   color: white;
 }
 
-.EditButtons{
+.EditButtons {
   align-items: center;
 }
 </style>
