@@ -39,6 +39,7 @@
                 type="password"
                 name="password"
                 placeholder="Mot de passe"
+                minlength="4"
                 required
               />
               <button id="login" type="submit">S'inscrire</button>
@@ -57,9 +58,19 @@ import axios from 'axios'
 export default {
   name: "RegisterPage",
   methods: {
+    validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    },
+    validatePassword(password){
+        return password.length >= 4;
+    },
     register(event){
       console.log(event)
       event.preventDefault();
+      if(!this.validateEmail(event.target.email.value) || !this.validatePassword(event.target.password.value)){
+        return;
+      }
       axios
       .post('http://localhost:3000/api/users/register', {
         first_name: event.target.first_name.value,
@@ -148,8 +159,8 @@ a {
   display: flex;
   flex-direction: column;
   width: 25%;
-  height: 25%;
-  margin-top: 15%;
+  min-width: 300px;
+  margin-top: 300px;
   border-radius: 15px;
   padding: 20px;
 }
@@ -189,5 +200,37 @@ input {
 #login:hover {
   background-color: #d1515a;
   color: white;
+}
+
+@media screen and (max-width: 1000px) {
+  .LoginSection {
+  background: #242526;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: 300px;
+  margin-top: 300px;
+  border-radius: 15px;
+  padding: 20px;
+}
+header{
+  flex-direction: column;
+  height: 20%;
+
+}
+
+header ul,
+header li {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+header img {
+  width: 300px;
+  padding: 0px;
+  margin-top: -50px;
+  justify-content: center;
+}
 }
 </style>

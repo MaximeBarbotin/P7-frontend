@@ -9,34 +9,12 @@
             alt=""
           />
           <ul>
-            <a class="leftMenu" href="#"
-              ><li><i class="fa fa-home" aria-hidden="true"></i>Accueil</li></a
-            >
-            <a class="leftMenu" href="#"
-              ><li>
-                <i class="fa fa-search" aria-hidden="true"></i>Explorer
-              </li></a
-            >
-            <a class="leftMenu" href="#"
-              ><li>
-                <i class="fa fa-bell" aria-hidden="true"></i>Notifications
-              </li></a
-            >
-            <a class="leftMenu" href="#"
-              ><li>
-                <i class="fa fa-envelope" aria-hidden="true"></i>Messages
-              </li></a
-            >
-            <a class="leftMenu" href="/profile"
-              ><li>
-                <i class="fa fa-user" aria-hidden="true"></i>Mon profil
-              </li></a
-            >
-            <a class="leftMenu" href="#" @click="logout($event)"
-              ><li>
-                <i class="fa fa-power-off" aria-hidden="true"></i>Déconnexion
-              </li></a
-            >
+            <a class="leftMenu" href="#"><i class="fa fa-home" aria-hidden="true"></i><li>Accueil</li></a>
+            <a class="leftMenu" href="#"><i class="fa fa-search" aria-hidden="true"></i><li>Explorer</li></a>
+            <a class="leftMenu" href="#"><i class="fa fa-bell" aria-hidden="true"></i><li>Notifications</li></a>
+            <a class="leftMenu" href="#"><i class="fa fa-envelope" aria-hidden="true"></i><li>Messages</li></a>
+            <a class="leftMenu" href="/profile"><i class="fa fa-user" aria-hidden="true"></i><li>Mon profil</li></a>
+            <a class="leftMenu" href="#" @click="logout($event)"><i class="fa fa-power-off" aria-hidden="true"></i><li>Déconnexion</li></a>
           </ul>
         </div>
       </aside>
@@ -47,27 +25,31 @@
             <div class="container">
               <form class="post" @submit="createPost($event)">
                 <h2>Publier</h2>
-                  <input type="text" name="title" id="titleArea" placeholder="Votre titre" required>
-                  <textarea
-                    id="PostArea"
-                    name="description"
-                    rows="5"
-                    placeholder="Ecrivez ici..."
-                  ></textarea>
-                  <label for="AddIMGG" id="AddIMG">Ajouter un média</label>
-                  <input type="file" id="AddIMGG" name="image"/>
-                  <button type="submit" id="publier">
-                    Publier
-                  </button>
+                <input
+                  type="text"
+                  name="title"
+                  id="titleArea"
+                  placeholder="Votre titre"
+                  required
+                />
+                <textarea
+                  id="PostArea"
+                  name="description"
+                  rows="5"
+                  placeholder="Ecrivez ici..."
+                ></textarea>
+                <label for="AddIMGG" id="AddIMG">Ajouter un média</label>
+                <input type="file" id="AddIMGG" name="image" />
+                <button type="submit" id="publier">Publier</button>
               </form>
             </div>
             <div v-for="post in posts" :key="post.id">
-              <PostComponent 
+              <PostComponent
                 :post="post"
                 :addLike="addLike"
                 :deletePost="deletePost"
                 :modifyPostParent="modifyPost"
-                 />
+              />
             </div>
           </div>
         </div>
@@ -162,81 +144,87 @@ export default {
   },
   methods: {
     addLike(postId) {
-
       const token = localStorage.getItem("groupomania_token");
-      axios.post("http://localhost:3000/api/posts/" + postId + '/like', {}, {
-        headers: { Authorization: "Bearer " + token },
-      }).then(d => {
-        this.posts = this.posts.map(post => {
-          if(post.id === postId){
-            if(d.status === 201){
-              post.likes += 1
-              post.liked = 1
-            } else {
-              post.likes -= 1
-              post.liked = 0
+      axios
+        .post(
+          "http://localhost:3000/api/posts/" + postId + "/like",
+          {},
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        )
+        .then((d) => {
+          this.posts = this.posts.map((post) => {
+            if (post.id === postId) {
+              if (d.status === 201) {
+                post.likes += 1;
+                post.liked = 1;
+              } else {
+                post.likes -= 1;
+                post.liked = 0;
+              }
             }
-          }
-          return post;
-        })
-      }) 
-
-    
+            return post;
+          });
+        });
     },
-  //Création d'un POST
-  createPost(event) {
-    event.preventDefault();
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', event.target.title.value)
-    bodyFormData.append('description', event.target.description.value)
-    bodyFormData.append('image', event.target.image.files[0])
+    //Création d'un POST
+    createPost(event) {
+      event.preventDefault();
+      var bodyFormData = new FormData();
+      bodyFormData.append("title", event.target.title.value);
+      bodyFormData.append("description", event.target.description.value);
+      bodyFormData.append("image", event.target.image.files[0]);
 
-    const token = localStorage.getItem("groupomania_token");
-    axios
-      .post("http://localhost:3000/api/posts", bodyFormData, {
-        headers: { Authorization: "Bearer " + token, 'Content-Type': 'multipart/form-data' },
-      })
-      .then((d) => {
-        this.posts = [d.data.post].concat(this.posts)
-        event.target.title.value = '';
-        event.target.description.value = '';
-        event.target.image.value = null;
-      });
-  },
-  modifyPost(pid, post) {
-      
       const token = localStorage.getItem("groupomania_token");
       axios
-      .put("http://localhost:3000/api/posts/" + pid, post, {
-        headers: { Authorization: "Bearer " + token },
-      }).then((d) => {
-        this.posts = this.posts.map(p => {
-          if(pid === p.id){
-            p['image'] = d.data.filename
-          }
-         
-          return p
+        .post("http://localhost:3000/api/posts", bodyFormData, {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "multipart/form-data",
+          },
         })
-      })
+        .then((d) => {
+          this.posts = [d.data.post].concat(this.posts);
+          event.target.title.value = "";
+          event.target.description.value = "";
+          event.target.image.value = null;
+        });
     },
-  deletePost(id){
-    if(confirm('Voulez-vous vraiment supprimer ce post ?')){
+    modifyPost(pid, post) {
       const token = localStorage.getItem("groupomania_token");
       axios
-        .delete("http://localhost:3000/api/posts/"+ id, {
+        .put("http://localhost:3000/api/posts/" + pid, post, {
           headers: { Authorization: "Bearer " + token },
         })
-        .then(() => {
-          this.posts = this.posts.filter(post => post.id !== id)
+        .then((d) => {
+          this.posts = this.posts.map((p) => {
+            if (pid === p.id) {
+              p["image"] = d.data.filename;
+            }
+
+            return p;
+          });
         });
-    }
+    },
+    deletePost(id) {
+      if (confirm("Voulez-vous vraiment supprimer ce post ?")) {
+        const token = localStorage.getItem("groupomania_token");
+        axios
+          .delete("http://localhost:3000/api/posts/" + id, {
+            headers: { Authorization: "Bearer " + token },
+          })
+          .then(() => {
+            this.posts = this.posts.filter((post) => post.id !== id);
+          });
+      }
+    },
+    logout(event) {
+      event.preventDefault();
+      localStorage.removeItem("groupomania_token");
+      this.$router.push("/login");
+    },
   },
-  logout(event){
-    event.preventDefault();
-    localStorage.removeItem('groupomania_token')
-    this.$router.push('/login')
-  }
-  }
 };
 </script>
 
@@ -471,10 +459,9 @@ a {
   .AsideMenu {
     position: fixed;
     height: 100px;
-    font-size: 1.3em;
-    top: 0px;
     right: 0;
     padding-top: 0px;
+    margin-top: -30px;
     z-index: 4;
     display: flex;
     flex-direction: row;
@@ -482,9 +469,22 @@ a {
     background: #242526;
     box-shadow: 0px 0px 10px #242526;
   }
+
   .AsideMenu img {
     display: none;
   }
+
+   .AsideMenu ul a li {
+    display: none;
+  }
+
+  .AsideMenu i {
+    margin-top: 40px;
+    padding-right: 20px;
+    padding-left: 20px;
+
+  }
+
 
   .AsideMenu ul {
     margin: auto;
@@ -496,6 +496,7 @@ a {
 
   .AsideMenu li {
     margin-right: 20px;
+    flex-direction: row;
   }
 
   main {
@@ -515,8 +516,15 @@ a {
     font-size: 1em;
   }
 
-  .post {
-    width: 80%;
+  .AsideMenu i {
+    margin-top: 40px;
+    padding-right: 10px;
+    padding-left: 10px;
   }
+
+  .post {
+    width: 90%;
+  }
+  
 }
 </style>

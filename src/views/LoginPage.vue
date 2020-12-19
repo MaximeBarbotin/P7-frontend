@@ -148,8 +148,8 @@ a {
   display: flex;
   flex-direction: column;
   width: 25%;
-  height: 25%;
-  margin-top: 15%;
+  min-width: 300px;
+  margin-top: 300px;
   border-radius: 15px;
   padding: 20px;
 }
@@ -189,5 +189,37 @@ input {
 #login:hover {
   background-color: #d1515a;
   color: white;
+}
+
+@media screen and (max-width: 1000px) {
+  .LoginSection {
+  background: #242526;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: 300px;
+  margin-top: 300px;
+  border-radius: 15px;
+  padding: 20px;
+}
+header{
+  flex-direction: column;
+  height: 20%;
+
+}
+
+header ul,
+header li {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+header img {
+  width: 300px;
+  padding: 0px;
+  margin-top: -50px;
+  justify-content: center;
+}
 }
 </style>

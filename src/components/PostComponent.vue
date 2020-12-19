@@ -431,4 +431,25 @@ input::placeholder {
 .EditButtons {
   align-items: center;
 }
+
+
+@media screen and (max-width: 700px) {
+  .post {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 390) {
+  .post{
+  color: rgb(228, 230, 235);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 40px;
+  padding: 0px 30px 5px 30px;
+  background-color: #242526;
+  border-radius: 10px;
+}
+}
 </style>
